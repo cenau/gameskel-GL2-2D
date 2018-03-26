@@ -30,7 +30,8 @@ const player = ents.createEntity();
 player.addComponent(Position);
 player.addComponent(WASD);
 
-player.position.y = 8;
+player.position.x = 50;
+player.position.y = 50;
 
 
 
@@ -40,8 +41,11 @@ const engine = rafloop(function(dt) {
     ents.queryComponents([Position, WASD]).forEach((each) => {
       wasdSystem(each,[kd.W.isDown(), kd.A.isDown(),kd.S.isDown(),kd.D.isDown()])
     });
+    
+    let thingsToRender = [player]
+    
 
-    renderer.render();
+    renderer.render(thingsToRender);
 
 }).start()
 
