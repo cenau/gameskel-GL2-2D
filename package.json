@@ -4,6 +4,8 @@
   "description": "2D game skeleton using Gl2",
   "main": "",
   "dependencies": {
+    "canvas-fit": "^1.5.0",
+    "gl-shader": "^4.2.1",
     "glslify": "^6.0.2",
     "keydrown": "^1.2.2",
     "npm": "^5.8.0",
