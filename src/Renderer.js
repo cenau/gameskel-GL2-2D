@@ -10,8 +10,9 @@ class Renderer {
     twgl.setDefaults({attribPrefix: "a_"});
     this.programs = [];
     this.programs = this.createPrograms();
-    console.log("Renderer:", this.programs.length, "shaders linked");
-  this.bufferInfo = primitives.createXYQuadBufferInfo(this.gl);
+    this.bufferInfo = primitives.createXYQuadBufferInfo(this.gl)
+    this.cameraPosition = {"x":0,"y":0};
+    this.cameraRotation = 0;
   }
 
     createPrograms(){
@@ -25,8 +26,17 @@ class Renderer {
     thingsToRender.forEach((each) => {
     //pixel to clip space 
     let matrix = m4.ortho(0, this.gl.canvas.width, this.gl.canvas.height, 0, -1, 1);
-   
-      matrix = m4.translate(matrix,[each.position.x,each.position.y,0]) 
+    let cameraMatrix = m4.identity();
+    const camTranslationCentre = [-this.gl.canvas.width/2 ,-this.gl.canvas.height/2,0]
+    const camTranslationTarget = [this.cameraPosition.x ,this.cameraPosition.y,0]
+      cameraMatrix = m4.translate(cameraMatrix,camTranslationTarget)
+      cameraMatrix = m4.rotateZ(cameraMatrix,Math.PI/2 + this.cameraRotation);
+      cameraMatrix = m4.translate(cameraMatrix,camTranslationCentre)
+    let viewMatrix = m4.inverse(cameraMatrix);
+    matrix = m4.multiply(matrix,viewMatrix);
+    const translation = [each.position.x,each.position.y,0]
+      matrix = m4.translate(matrix,translation)
+      matrix = m4.rotateZ(matrix,Object.is(undefined,each.rotation) ? 0 : each.rotation.heading);
       matrix = m4.scale(matrix,[10,10,1]) 
       const uniforms = {
       u_resolution: [this.gl.canvas.width, this.gl.canvas.height],
