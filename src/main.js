@@ -9,13 +9,16 @@ import renderer2D from './Renderer'
 import Visible from './Visible'
 import Position from './Position'
 import Rotation from './Rotation'
-import Thrust from './Thrust'
+import Movement from './Movement'
+import Wander from './Wander'
 import CameraTarget from './CameraTarget'
 import WASD from './WASD'
 import Collidable from './Collidable'
 
 // systems
+import movementSystem from './movementSystem'
 import wasdSystem from './wasdSystem'
+import wanderSystem from './wanderSystem'
 import cameraTargetSystem from './cameraTargetSystem'
 import collidableSystem from './collidableSystem'
 
@@ -36,7 +39,7 @@ const player = ents.createEntity();
 player.addComponent(Position);
 player.addComponent(Visible);
 player.addComponent(Rotation);
-player.addComponent(Thrust);
+player.addComponent(Movement);
 player.addComponent(WASD);
 player.addComponent(CameraTarget);
 player.addComponent(Collidable);
@@ -49,8 +52,10 @@ for (let i = 0; i < 10; i++) {
   obj.position.y = -150 + Math.random() * 300
   obj.rotation.heading = Math.random() * Math.PI  *4
   obj.addComponent(Visible)
-  obj.addComponent(Thrust);
+  obj.addComponent(Movement);
   obj.addComponent(Collidable);
+  obj.addComponent(Wander);
+  obj.movement.accel = 0.05
 }
 
 
@@ -60,9 +65,17 @@ const engine = rafloop(function(dt) {
     ents.queryComponents([Position, Rotation, WASD]).forEach((each) => {
       wasdSystem(each,[kd.W.isDown(), kd.A.isDown(),kd.S.isDown(),kd.D.isDown()])
     });
+    ents.queryComponents([Position, Rotation, Movement]).forEach((each) => {
+      movementSystem(each)
+    });
     ents.queryComponents([Position, CameraTarget]).forEach((each) => {
       cameraTargetSystem(each,renderer)
     });
+    ents.queryComponents([Wander]).forEach((each) => {
+      wanderSystem(each)
+    });
+
+
     const thingsToCollide = ents.queryComponents([Position, Collidable])
     
     const thingsToRender = ents.queryComponents([Visible])
