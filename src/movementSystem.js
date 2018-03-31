@@ -2,11 +2,15 @@ export default movementSystem;
 
 function movementSystem(thing){
   
-  thing.movement.speed -= thing.movement.damping * thing.movement.speed
+  thing.movement.velocity.x -= thing.movement.damping * thing.movement.velocity.x;
+  thing.movement.velocity.y -= thing.movement.damping * thing.movement.velocity.y;
   
+  thing.movement.velocity.x = thing.movement.velocity.x + Math.cos(thing.rotation.heading - Math.PI/2) * thing.movement.thrusting * thing.movement.accel ;
+  thing.movement.velocity.y = thing.movement.velocity.y + Math.sin(thing.rotation.heading - Math.PI/2) * thing.movement.thrusting * thing.movement.accel;
+  
+  thing.position.x += thing.movement.velocity.x;
+  thing.position.y += thing.movement.velocity.y;
 
-  thing.position.x = thing.position.x + Math.cos(thing.rotation.heading) * thing.movement.speed ;
-  thing.position.y = thing.position.y + Math.sin(thing.rotation.heading) * thing.movement.speed;
 
 
 }
