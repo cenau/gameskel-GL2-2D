@@ -5,6 +5,7 @@ import Movement from './Movement'
 import Collidable from './Collidable'
 import Deathclock from './Deathclock'
 import Damaging from './Damaging'
+import Colour from './Colour'
 
 
 
@@ -21,6 +22,7 @@ function weaponSystem(thing,trigger,ents,time) {
     bullet.addComponent(Collidable)
     bullet.addComponent(Deathclock)
     bullet.addComponent(Damaging)
+    bullet.addComponent(Colour)
   bullet.position.x = thing.position.x + Math.cos(thing.rotation.heading - Math.PI/2); 
   bullet.position.y = thing.position.y + Math.sin(thing.rotation.heading - Math.PI/2);  
   bullet.rotation.heading = thing.rotation.heading + (0.5 - Math.random()) * thing.weapon.spread; 
@@ -29,6 +31,7 @@ function weaponSystem(thing,trigger,ents,time) {
   bullet.movement.velocity.y = thing.movement.velocity.y + Math.sin(bullet.rotation.heading - Math.PI/2) * 40;  
   bullet.movement.damping = thing.weapon.projectileDamping;
   bullet.deathclock.TTL = thing.weapon.projectileTTL;
+  bullet.colour.rgb = thing.weapon.projectileColour;
   bullet.position.xsize *= 0.25;
   }
 }

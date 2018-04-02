@@ -7,4 +7,5 @@ function Weapon() {
   this.barrelSpeed = 20;
   this.projectileDamping = 0.005;
   this.projectileTTL = 1000 //in ms;
+  this.projectileColour = [1,0,0.5]
 }

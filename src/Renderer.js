@@ -41,8 +41,9 @@ terrainGui.add(this.backgroundUniforms, 'u_gain', -5, 5)
 
     this.gl = gl;
 
+
     this.gl.enable(this.gl.BLEND);
-    this.gl.blendFunc(this.gl.ONE, this.gl.ONE_MINUS_SRC_ALPHA);
+    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
     twgl.setDefaults({attribPrefix: "a_"});
     this.programs = {};
     this.programs = this.createPrograms();
@@ -55,6 +56,7 @@ terrainGui.add(this.backgroundUniforms, 'u_gain', -5, 5)
       {
         ship: { src: "../assets/ship1.png", mag: gl.NEAREST },
         missing: { src: "../assets/missing.png", mag: gl.NEAREST },
+        pad: { src: "../assets/pad.png", mag: gl.NEAREST },
         enemy: { src: "../assets/enemy.png", mag: gl.NEAREST }
         
       
@@ -65,6 +67,7 @@ terrainGui.add(this.backgroundUniforms, 'u_gain', -5, 5)
     createPrograms(){
     const progs = {
       test : {"progInfo": twgl.createProgramInfo(this.gl, [glslify('../shaders/vert.glsl'), glslify('../shaders/frag.glsl')])},
+      waymarker : {"progInfo": twgl.createProgramInfo(this.gl, [glslify('../shaders/vert.glsl'), glslify('../shaders/waymarker_frag.glsl')])},
       sprite : {"progInfo": twgl.createProgramInfo(this.gl, [glslify('../shaders/sprite_vert.glsl'), glslify('../shaders/sprite_frag.glsl')])},
       background : {"progInfo": twgl.createProgramInfo(this.gl, [glslify('../shaders/fullscreen_vert.glsl'), glslify('../shaders/background_frag.glsl')])},
       exploding : {"progInfo": twgl.createProgramInfo(this.gl, [glslify('../shaders/exploding_sprite_vert.glsl'), glslify('../shaders/exploding_sprite_frag.glsl')])}
@@ -112,14 +115,19 @@ terrainGui.add(this.backgroundUniforms, 'u_gain', -5, 5)
       matrix = m4.translate(matrix,translation)
       matrix = m4.rotateZ(matrix,Object.is(undefined,each.rotation) ? 0 : each.rotation.heading);
       matrix = m4.scale(matrix,[each.position.xsize,each.position.ysize,1]) 
-      const uniforms = {
+      let uniforms = {
         u_diffuse: this.textures[Object.is(undefined,each.sprite) ? "missing" : each.sprite.texture],
       u_resolution: [this.gl.canvas.width, this.gl.canvas.height],
       u_time : time,
         u_matrix: matrix
       };
 
-    let prog = this.programs.test;
+
+        if (!Object.is(undefined,each.colour)){
+          uniforms.u_colour = each.colour.rgb;
+        }
+   // Object.assign(uniforms, each.uniforms.uniforms);
+      let prog = this.programs.test;
     if (each.sprite) {
       prog = this.programs.sprite
 
@@ -127,6 +135,16 @@ terrainGui.add(this.backgroundUniforms, 'u_gain', -5, 5)
       prog = this.programs.exploding
 
       }
+    }
+
+    if (each.waymarker) {
+      if (each.waymarker.onscreen==true){
+        prog = this.programs.waymarker
+      }
+      else {
+        prog = this.programs.test
+      }
+
     }
 
     this.gl.useProgram(prog.progInfo.program);
