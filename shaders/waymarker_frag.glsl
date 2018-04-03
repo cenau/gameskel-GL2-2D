@@ -32,7 +32,7 @@ float theta = atan(st.y,st.x);
     float len = length(st) - 0.5;
 
 float alpha = reticule(theta, len,3.);  
-outColor = vec4(u_colour, alpha * 1.5 - (len + 0.5) );
+outColor = vec4(u_colour, alpha * 1.2 - (len + 0.5) );
 
 }
 

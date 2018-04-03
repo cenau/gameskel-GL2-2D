@@ -22,6 +22,7 @@ import Damaging from './Damaging'
 import Sprite from './Sprite'
 import Beacon from './Beacon'
 import Waymarker from './Waymarker'
+import Exhaust from './Exhaust'
 
 
 // systems
@@ -36,6 +37,7 @@ import weaponSystem from './weaponSystem'
 import deathclockSystem from './deathclockSystem'
 import beaconSystem from './beaconSystem'
 import waymarkerSystem from './waymarkerSystem'
+import exhaustSystem from './exhaustSystem'
 
 //setup renderer
 
@@ -60,6 +62,7 @@ player.addComponent(CameraTarget);
 player.addComponent(Collidable);
 player.addComponent(Weapon);
 player.addComponent(Sprite);
+player.addComponent(Exhaust);
 
 player.position.xsize = 32;
 player.position.ysize = 32;
@@ -79,11 +82,13 @@ pad.position.x = 0;
 pad.position.y = 0;
 pad.sprite.texture = "pad"
 //some enemies
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 10; i++) {
   let obj = ents.createEntity()
   obj.addComponent(Position)
   obj.addComponent(Rotation)
   obj.addComponent(Beacon)
+  obj.addComponent(Exhaust)
+  obj.exhaust.projectileColour = [0.9,0.5,0.3]
   obj.beacon.colour = [1,0,0]
   obj.position.x = -1500 + Math.random() * 3000
   obj.position.y = -6000 + Math.random() * 3000
@@ -97,8 +102,8 @@ for (let i = 0; i < 100; i++) {
   obj.addComponent(Wander);
   obj.sprite.texture = "enemy"
   obj.movement.accel = 0.05
- obj.position.xsize = 64;
- obj.position.ysize = 64;
+ obj.position.xsize = 32;
+ obj.position.ysize = 32;;
 }
 
 
@@ -116,6 +121,10 @@ const engine = rafloop(function(dt) {
     ents.queryComponents([Weapon]).forEach((each) => {
       weaponSystem(each,kd.SHIFT.isDown(),ents,time)
     });
+    
+   ents.queryComponents([Exhaust]).forEach((each) => {
+      exhaustSystem(each,1,ents,time)
+    });
   
 
   ents.queryComponents([Position, Rotation, Movement]).forEach((each) => {
@@ -128,7 +137,7 @@ const engine = rafloop(function(dt) {
     });
 
     ents.queryComponents([Wander]).forEach((each) => {
-      wanderSystem(each)
+      wanderSystem(each,time)
     });
     ents.queryComponents([SweepRotate]).forEach((each) => {
       sweepRotateSystem(each)
