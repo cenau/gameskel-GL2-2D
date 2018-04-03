@@ -76,10 +76,10 @@ pad.position.xsize = 256;
 pad.position.ysize = 256;
 pad.position.z = -1;
 pad.position.x = 0;
-pad.position.y = -2000;
+pad.position.y = 0;
 pad.sprite.texture = "pad"
 //some enemies
-for (let i = 0; i < 0; i++) {
+for (let i = 0; i < 100; i++) {
   let obj = ents.createEntity()
   obj.addComponent(Position)
   obj.addComponent(Rotation)
@@ -87,16 +87,18 @@ for (let i = 0; i < 0; i++) {
   obj.beacon.colour = [1,0,0]
   obj.position.x = -1500 + Math.random() * 3000
   obj.position.y = -6000 + Math.random() * 3000
+  //obj.position.x = 1000 + i * 100;
+  //obj.position.y = 1000 + i * 100;
   obj.rotation.heading = Math.random() * Math.PI  *4
   obj.addComponent(Visible)
   obj.addComponent(Movement);
   obj.addComponent(Collidable);
   obj.addComponent(Sprite);
-  //obj.addComponent(Wander);
+  obj.addComponent(Wander);
   obj.sprite.texture = "enemy"
-  obj.movement.accel = 0.1
- obj.position.xsize = 24;
- obj.position.ysize = 24;
+  obj.movement.accel = 0.05
+ obj.position.xsize = 64;
+ obj.position.ysize = 64;
 }
 
 
