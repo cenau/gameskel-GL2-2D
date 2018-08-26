@@ -67,7 +67,7 @@ player.addComponent(Exhaust);
 player.position.xsize = 32;
 player.position.ysize = 32;
 player.sprite.texture = "ship"
-
+player.rotation.accel = 0.005;
 //lander/launcher
 
 const pad = ents.createEntity()
