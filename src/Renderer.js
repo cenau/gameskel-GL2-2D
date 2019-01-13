@@ -68,6 +68,7 @@ terrainGui.add(this.backgroundUniforms, 'u_gain', -5, 5)
     const progs = {
       test : {"progInfo": twgl.createProgramInfo(this.gl, [glslify('../shaders/vert.glsl'), glslify('../shaders/frag.glsl')])},
       waymarker : {"progInfo": twgl.createProgramInfo(this.gl, [glslify('../shaders/vert.glsl'), glslify('../shaders/waymarker_frag.glsl')])},
+      scanwedge : {"progInfo": twgl.createProgramInfo(this.gl, [glslify('../shaders/sprite_vert.glsl'), glslify('../shaders/scanwedge_frag.glsl')])},
       sprite : {"progInfo": twgl.createProgramInfo(this.gl, [glslify('../shaders/sprite_vert.glsl'), glslify('../shaders/sprite_frag.glsl')])},
       background : {"progInfo": twgl.createProgramInfo(this.gl, [glslify('../shaders/fullscreen_vert.glsl'), glslify('../shaders/background_frag.glsl')])},
       exploding : {"progInfo": twgl.createProgramInfo(this.gl, [glslify('../shaders/exploding_sprite_vert.glsl'), glslify('../shaders/exploding_sprite_frag.glsl')])}
@@ -128,13 +129,17 @@ terrainGui.add(this.backgroundUniforms, 'u_gain', -5, 5)
         }
    // Object.assign(uniforms, each.uniforms.uniforms);
       let prog = this.programs.test;
-    if (each.sprite) {
+      if (each.sprite) {
       prog = this.programs.sprite
 
       if (each.exploding){
       prog = this.programs.exploding
 
       }
+    }
+    if (each.scanwedge) {
+      prog = this.programs.scanwedge
+
     }
 
     if (each.waymarker) {
@@ -154,7 +159,6 @@ terrainGui.add(this.backgroundUniforms, 'u_gain', -5, 5)
     
     }) 
     }
-
 }
 
 export default Renderer;
